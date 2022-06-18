@@ -18,7 +18,7 @@ const AuthenticationNavigator = () => {
                 component={Register}
                 options={{
                     headerShown: true,
-                    title: "Create New User"
+                    title: "Register"
                 }}
             />
         </Stack.Navigator>
