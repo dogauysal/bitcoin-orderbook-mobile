@@ -1,35 +1,42 @@
 import { Field, Formik, FormikHelpers } from "formik";
 import { Box, Button, Text, Center, FormControl, Heading, Input, KeyboardAvoidingView, VStack } from "native-base";
-import React, { useState } from "react";
-import { User } from "../../models/User";
+import React, { useContext } from "react";
+import { IUser } from "../../models/User";
 import * as yup from 'yup'
 import YupPassword from 'yup-password'
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { authentication } from "../../firebase";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { AuthParamList } from "../../navigation/Types";
+import { observer } from "mobx-react-lite";
+import { RootStoreContext } from "../../stores/rootStore";
+import { useUpdateProfile } from 'react-firebase-hooks/auth';
+import { authentication } from "../../firebase";
 
 type RegisterScreenNavigationProp = NativeStackScreenProps<AuthParamList, "Register">
 
-const Register = ({
+const Register = observer(({
     navigation
 }: RegisterScreenNavigationProp) => {
 
+    const rootStore = useContext(RootStoreContext);
+    const { register } = rootStore.authStore;
+
     YupPassword(yup)
 
-    const RegisterUser = (user: User, formikActions: FormikHelpers<User>) => {
 
-        createUserWithEmailAndPassword(authentication, user.Email, user.Password)
-            .then((res) => {
-                if (res.user && !res.user.getIdToken()) {
-                    navigation.goBack()
-                }
-            })
+    const [updateProfile,] = useUpdateProfile(authentication);
 
-        formikActions.resetForm();
+
+
+    const RegisterUser = async (user: IUser, formikActions: FormikHelpers<IUser>) => {
+        await register(user)
+        await updateProfile({ displayName: `${user.Name} ${user.Surname}` });
+
+        formikActions.resetForm()
+        navigation.navigate("Login")
+
     }
 
-    const user: User = {
+    const user: IUser = {
         Name: "",
         Surname: "",
         Email: "",
@@ -143,6 +150,6 @@ const Register = ({
 
 
     )
-}
+})
 
 export default Register;

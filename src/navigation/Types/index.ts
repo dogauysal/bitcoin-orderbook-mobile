@@ -1,6 +1,4 @@
-import { CompositeNavigationProp, NavigatorScreenParams } from "@react-navigation/native";
-import { NativeStackNavigationProp, NativeStackScreenProps } from "@react-navigation/native-stack";
-
+import { NavigatorScreenParams } from "@react-navigation/native";
 export type RootStackParamList = {
     Auth: NavigatorScreenParams<AuthParamList>;
     Home: undefined;
@@ -9,4 +7,12 @@ export type RootStackParamList = {
 export type AuthParamList = {
     Login: undefined;
     Register: undefined;
+}
+
+export type MarketParamList = {
+    Market: undefined;
+    MarketDetail: {
+        marketCode: string
+    };
+    Profile: undefined
 }

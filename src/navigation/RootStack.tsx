@@ -2,10 +2,11 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import AuthenticationNavigator from "./Navigators/AuthenticationNavigator";
 import HomeNavigator from "./Navigators/HomeNavigator";
 import { RootStackParamList } from "./Types";
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { authentication } from "../firebase";
 
 const RootStack = () => {
-
-    let isAuthenticated = false;
+    const [user] = useAuthState(authentication);
 
     const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -15,7 +16,7 @@ const RootStack = () => {
                 headerShown: false
             }}
         >
-            {isAuthenticated ?
+            {user ?
                 (
                     <>
                         <Stack.Screen
